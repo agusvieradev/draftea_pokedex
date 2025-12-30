@@ -20,11 +20,9 @@ class PokemonRepositoryImpl implements PokemonRepository {
   }) async {
     try {
       final list = await api.fetchList(limit: limit, offset: offset);
-
       final result = list.map((dto) {
         final id = dto.id;
         final imageUrl = '${AppConfig.imageBaseUrl}/$id.png';
-
         return Pokemon(
           id: id,
           name: dto.name,
@@ -47,6 +45,10 @@ class PokemonRepositoryImpl implements PokemonRepository {
         id: dto.id,
         name: dto.name,
         imageUrl: dto.imageUrl,
+        height: dto.height,
+        weight: dto.weight,
+        stats: dto.stats,
+        types: dto.types,
       );
       await local.saveDetail(pokemon);
       return pokemon;

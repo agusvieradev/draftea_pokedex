@@ -9,7 +9,15 @@ class PokemonLocal {
   Future<void> saveList(List<Pokemon> list) async {
     await box.put(
       'list',
-      list.map((e) => {'id': e.id, 'name': e.name, 'imageUrl': e.imageUrl}).toList(),
+      list.map((e) => {
+        'id': e.id,
+        'name': e.name,
+        'imageUrl': e.imageUrl,
+        'height': e.height,
+        'weight': e.weight,
+        'stats': e.stats,
+        'types': e.types,
+      }).toList(),
     );
   }
 
@@ -21,6 +29,10 @@ class PokemonLocal {
         id: e['id'],
         name: e['name'],
         imageUrl: e['imageUrl'],
+        height: e['height'] ?? 0,
+        weight: e['weight'] ?? 0,
+        stats: Map<String, int>.from(e['stats'] ?? {}),
+        types: List<String>.from(e['types'] ?? []),
       );
     }).toList();
   }
@@ -30,6 +42,10 @@ class PokemonLocal {
       'id': pokemon.id,
       'name': pokemon.name,
       'imageUrl': pokemon.imageUrl,
+      'height': pokemon.height,
+      'weight': pokemon.weight,
+      'stats': pokemon.stats,
+      'types': pokemon.types,
     });
   }
 
@@ -40,6 +56,10 @@ class PokemonLocal {
       id: rawDetail['id'],
       name: rawDetail['name'],
       imageUrl: rawDetail['imageUrl'],
+      height: rawDetail['height'] ?? 0,
+      weight: rawDetail['weight'] ?? 0,
+      stats: Map<String, int>.from(rawDetail['stats'] ?? {}),
+      types: List<String>.from(rawDetail['types'] ?? []),
     );
   }
 }
