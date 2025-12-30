@@ -9,15 +9,17 @@ class PokemonLocal {
   Future<void> saveList(List<Pokemon> list) async {
     await box.put(
       'list',
-      list.map((e) => {
-        'id': e.id,
-        'name': e.name,
-        'imageUrl': e.imageUrl,
-        'height': e.height,
-        'weight': e.weight,
-        'stats': e.stats,
-        'types': e.types,
-      }).toList(),
+      list
+          .map((e) => {
+                'id': e.id,
+                'name': e.name,
+                'imageUrl': e.imageUrl,
+                'height': e.height,
+                'weight': e.weight,
+                'stats': e.stats,
+                'types': e.types,
+              })
+          .toList(),
     );
   }
 

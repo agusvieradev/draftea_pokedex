@@ -45,7 +45,10 @@ class PokemonListPage extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: UiColors.primary,
                       ),
-                      child: const Text('Retry'),
+                      child: const Text(
+                        'Retry',
+                        style: UiTypography.chipLabel,
+                      ),
                     ),
                   ],
                 ),
