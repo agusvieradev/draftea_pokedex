@@ -1,4 +1,4 @@
-import 'package:draftea_pokedex/constants.dart';
+import 'package:draftea_pokedex/core/config/app_config.dart';
 import 'package:draftea_pokedex/feature/pokemon/data/pokemon_api.dart';
 import 'package:draftea_pokedex/feature/pokemon/data/pokemon_local.dart';
 import 'package:draftea_pokedex/feature/pokemon/domain/pokemon.dart';
@@ -23,7 +23,7 @@ class PokemonRepositoryImpl implements PokemonRepository {
 
       final result = list.map((dto) {
         final id = dto.id;
-        final imageUrl = '$IMAGE_BASE_URL/$id.png';
+        final imageUrl = '${AppConfig.imageBaseUrl}/$id.png';
 
         return Pokemon(
           id: id,
