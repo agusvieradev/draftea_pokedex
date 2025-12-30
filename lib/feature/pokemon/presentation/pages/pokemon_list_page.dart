@@ -1,9 +1,10 @@
 import 'package:draftea_pokedex/core/ui/media_query_ext.dart';
 import 'package:draftea_pokedex/feature/pokemon/presentation/cubit/pokemon_list_cubit.dart';
 import 'package:draftea_pokedex/feature/pokemon/presentation/cubit/pokemon_list_states.dart';
+import 'package:draftea_pokedex/feature/pokemon/presentation/widgets/pokemon_card.dart';
+import 'package:draftea_pokedex/core/ui/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class PokemonListPage extends StatelessWidget {
   const PokemonListPage({super.key});
@@ -16,7 +17,14 @@ class PokemonListPage extends StatelessWidget {
       create: (_) => PokemonListCubit(context.read())..loadInitial(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Pokédex'),
+          title: const Text(
+            'Pokédex',
+            style: UiTypography.titleLarge,
+          ),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: UiColors.primary,
+          foregroundColor: Colors.white,
         ),
         body: BlocBuilder<PokemonListCubit, PokemonListState>(
           builder: (context, state) {
@@ -58,18 +66,9 @@ class PokemonListPage extends StatelessWidget {
                   return false;
                 },
                 child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                   itemCount: state.items.length,
-                  itemBuilder: (_, index) {
-                    final pokemon = state.items[index];
-                    return ListTile(
-                      leading: Image.network(pokemon.imageUrl, width: 56),
-                      title: Text(pokemon.name),
-                      subtitle: Text('#${pokemon.id}'),
-                      onTap: () {
-                        context.go('/pokemon/${pokemon.id}');
-                      },
-                    );
-                  },
+                  itemBuilder: (_, index) => PokemonCard(pokemon: state.items[index]),
                 ),
               );
               return isWide

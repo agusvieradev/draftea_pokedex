@@ -1,6 +1,10 @@
 import 'package:draftea_pokedex/core/ui/media_query_ext.dart';
 import 'package:draftea_pokedex/feature/pokemon/presentation/cubit/pokemon_detail_cubit.dart';
 import 'package:draftea_pokedex/feature/pokemon/presentation/cubit/pokemon_detail_state.dart';
+import 'package:draftea_pokedex/core/ui/ui_constants.dart';
+import 'package:draftea_pokedex/feature/pokemon/presentation/widgets/pokemon_header_section.dart';
+import 'package:draftea_pokedex/feature/pokemon/presentation/widgets/pokemon_image_section.dart';
+import 'package:draftea_pokedex/feature/pokemon/presentation/widgets/stats_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -20,10 +24,13 @@ class PokemonDetailPage extends StatelessWidget {
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
-              context.pop();
+              context.go('/');
             },
             icon: const Icon(Icons.arrow_back),
           ),
+          backgroundColor: UiColors.primary,
+          foregroundColor: Colors.white,
+          elevation: 0,
         ),
         body: BlocBuilder<PokemonDetailCubit, PokemonDetailState>(
           builder: (context, state) {
@@ -39,40 +46,49 @@ class PokemonDetailPage extends StatelessWidget {
             }
             if (state is PokemonDetailLoaded) {
               final pokemon = state.pokemon;
-              final pokemonImage = Image.network(pokemon.imageUrl, height: 200);
-              final pokemonInfo = Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    pokemon.name,
-                    style: Theme.of(context).textTheme.headlineMedium,
+              final content = SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 32,
                   ),
-                  const SizedBox(height: 8),
-                  Text('#${pokemon.id}'),
-                ],
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      PokemonImageSection(imageUrl: pokemon.imageUrl),
+                      const SizedBox(height: UiConstants.defaultSpacing),
+                      PokemonHeaderSection(
+                        name: pokemon.name,
+                        id: pokemon.id,
+                        types: pokemon.types!,
+                      ),
+                      const SizedBox(height: 28),
+                      StatsSection(
+                        title: 'Physical Stats',
+                        stats: {
+                          'height': pokemon.height!,
+                          'weight': pokemon.weight!,
+                        },
+                        isPhysical: true,
+                      ),
+                      const SizedBox(height: 24),
+                      StatsSection(
+                        title: 'Battle Stats',
+                        stats: pokemon.stats!,
+                        isPhysical: false,
+                      ),
+                    ],
+                  ),
+                ),
               );
               return isWide
                   ? Center(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          pokemonImage,
-                          const SizedBox(width: 32),
-                          pokemonInfo,
-                        ],
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 600),
+                        child: content,
                       ),
                     )
-                  : Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          pokemonImage,
-                          const SizedBox(height: 24),
-                          pokemonInfo,
-                        ],
-                      ),
-                    );
+                  : content;
             }
             return const SizedBox.shrink();
           },
