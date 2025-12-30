@@ -1,3 +1,4 @@
+import 'package:draftea_pokedex/core/ui/media_query_ext.dart';
 import 'package:draftea_pokedex/feature/pokemon/presentation/cubit/pokemon_detail_cubit.dart';
 import 'package:draftea_pokedex/feature/pokemon/presentation/cubit/pokemon_detail_state.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,8 @@ class PokemonDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isWide = context.isTabletUp;
+
     return BlocProvider(
       create: (_) => PokemonDetailCubit(context.read())..load(pokemonId),
       child: Scaffold(
@@ -28,17 +31,38 @@ class PokemonDetailPage extends StatelessWidget {
             }
             if (state is PokemonDetailLoaded) {
               final pokemon = state.pokemon;
+              final pokemonImage = Image.network(pokemon.imageUrl, height: 200);
+              final pokemonInfo = Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    pokemon.name,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text('#${pokemon.id}'),
+                ],
+              );
+              if (!isWide) {
+                return Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      pokemonImage,
+                      const SizedBox(height: 24),
+                      pokemonInfo,
+                    ],
+                  ),
+                );
+              }
               return Center(
-                child: Column(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Image.network(pokemon.imageUrl, height: 200),
-                    const SizedBox(height: 16),
-                    Text(
-                      pokemon.name,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    Text('#${pokemon.id}'),
+                    pokemonImage,
+                    const SizedBox(width: 32),
+                    pokemonInfo,
                   ],
                 ),
               );
