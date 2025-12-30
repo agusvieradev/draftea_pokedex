@@ -3,6 +3,7 @@ import 'package:draftea_pokedex/feature/pokemon/presentation/cubit/pokemon_detai
 import 'package:draftea_pokedex/feature/pokemon/presentation/cubit/pokemon_detail_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class PokemonDetailPage extends StatelessWidget {
   final int pokemonId;
@@ -16,7 +17,14 @@ class PokemonDetailPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => PokemonDetailCubit(context.read())..load(pokemonId),
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              context.pop();
+            },
+            icon: const Icon(Icons.arrow_back),
+          ),
+        ),
         body: BlocBuilder<PokemonDetailCubit, PokemonDetailState>(
           builder: (context, state) {
             if (state is PokemonDetailLoading) {
@@ -44,28 +52,27 @@ class PokemonDetailPage extends StatelessWidget {
                   Text('#${pokemon.id}'),
                 ],
               );
-              if (!isWide) {
-                return Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      pokemonImage,
-                      const SizedBox(height: 24),
-                      pokemonInfo,
-                    ],
-                  ),
-                );
-              }
-              return Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    pokemonImage,
-                    const SizedBox(width: 32),
-                    pokemonInfo,
-                  ],
-                ),
-              );
+              return isWide
+                  ? Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          pokemonImage,
+                          const SizedBox(width: 32),
+                          pokemonInfo,
+                        ],
+                      ),
+                    )
+                  : Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          pokemonImage,
+                          const SizedBox(height: 24),
+                          pokemonInfo,
+                        ],
+                      ),
+                    );
             }
             return const SizedBox.shrink();
           },

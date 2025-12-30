@@ -1,7 +1,6 @@
 import 'package:draftea_pokedex/feature/pokemon/domain/pokemon.dart';
 import 'package:draftea_pokedex/feature/pokemon/domain/pokemon_repository.dart';
 import 'package:draftea_pokedex/feature/pokemon/presentation/cubit/pokemon_list_states.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PokemonListCubit extends Cubit<PokemonListState> {
@@ -42,8 +41,7 @@ class PokemonListCubit extends Cubit<PokemonListState> {
           hasMore: result.length == _pageSize,
         ),
       );
-    } catch (e, st) {
-      debugPrint("Error loading pokemon list: $e\n$st");
+    } catch (_) {
       emit(const PokemonListError('Failed to load Pokémon'));
     } finally {
       _isLoading = false;

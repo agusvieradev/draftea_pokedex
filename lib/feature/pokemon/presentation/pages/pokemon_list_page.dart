@@ -24,9 +24,32 @@ class PokemonListPage extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
             if (state is PokemonListError) {
-              return Center(child: Text(state.message));
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(state.message),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<PokemonListCubit>().loadInitial();
+                      },
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              );
             }
+
             if (state is PokemonListLoaded) {
+              if (state.items.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No Pokémon available.\nConnect to the internet to load data.',
+                    textAlign: TextAlign.center,
+                  ),
+                );
+              }
               final pokemonList = NotificationListener<ScrollNotification>(
                 onNotification: (notification) {
                   if (notification.metrics.pixels > notification.metrics.maxScrollExtent - 200) {
@@ -49,15 +72,14 @@ class PokemonListPage extends StatelessWidget {
                   },
                 ),
               );
-              if (!isWide) {
-                return pokemonList;
-              }
-              return Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 600),
-                  child: pokemonList,
-                ),
-              );
+              return isWide
+                  ? Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 600),
+                        child: pokemonList,
+                      ),
+                    )
+                  : pokemonList;
             }
             return const SizedBox.shrink();
           },
