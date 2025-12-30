@@ -27,19 +27,27 @@ class PokemonListPage extends StatelessWidget {
               return Center(child: Text(state.message));
             }
             if (state is PokemonListLoaded) {
-              final pokemonList = ListView.builder(
-                itemCount: state.items.length,
-                itemBuilder: (_, index) {
-                  final pokemon = state.items[index];
-                  return ListTile(
-                    leading: Image.network(pokemon.imageUrl, width: 56),
-                    title: Text(pokemon.name),
-                    subtitle: Text('#${pokemon.id}'),
-                    onTap: () {
-                      context.go('/pokemon/${pokemon.id}');
-                    },
-                  );
+              final pokemonList = NotificationListener<ScrollNotification>(
+                onNotification: (notification) {
+                  if (notification.metrics.pixels > notification.metrics.maxScrollExtent - 200) {
+                    context.read<PokemonListCubit>().loadMore();
+                  }
+                  return false;
                 },
+                child: ListView.builder(
+                  itemCount: state.items.length,
+                  itemBuilder: (_, index) {
+                    final pokemon = state.items[index];
+                    return ListTile(
+                      leading: Image.network(pokemon.imageUrl, width: 56),
+                      title: Text(pokemon.name),
+                      subtitle: Text('#${pokemon.id}'),
+                      onTap: () {
+                        context.go('/pokemon/${pokemon.id}');
+                      },
+                    );
+                  },
+                ),
               );
               if (!isWide) {
                 return pokemonList;
