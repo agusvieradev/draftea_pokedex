@@ -1,13 +1,16 @@
 import 'package:dio/dio.dart';
-import 'package:draftea_pokedex/core/config/app_config.dart';
 
 class DioClient {
-  static Dio create() {
+  static Dio create({
+    required String baseUrl,
+    Duration? connectTimeout,
+    Duration? receiveTimeout,
+  }) {
     return Dio(
       BaseOptions(
-        baseUrl: AppConfig.apiBaseUrl,
-        connectTimeout: const Duration(seconds: AppConfig.connectionTimeout),
-        receiveTimeout: const Duration(seconds: AppConfig.receiveTimeout),
+        baseUrl: baseUrl,
+        connectTimeout: connectTimeout,
+        receiveTimeout: receiveTimeout,
       ),
     );
   }
