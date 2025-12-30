@@ -41,7 +41,22 @@ class PokemonDetailPage extends StatelessWidget {
             }
             if (state is PokemonDetailError) {
               return Center(
-                child: Text(state.message),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(state.message),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<PokemonDetailCubit>().load(pokemonId);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: UiColors.primary,
+                      ),
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
               );
             }
             if (state is PokemonDetailLoaded) {

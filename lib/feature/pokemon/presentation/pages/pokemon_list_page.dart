@@ -42,6 +42,9 @@ class PokemonListPage extends StatelessWidget {
                       onPressed: () {
                         context.read<PokemonListCubit>().loadInitial();
                       },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: UiColors.primary,
+                      ),
                       child: const Text('Retry'),
                     ),
                   ],
@@ -60,7 +63,7 @@ class PokemonListPage extends StatelessWidget {
               }
               final pokemonList = NotificationListener<ScrollNotification>(
                 onNotification: (notification) {
-                  if (notification.metrics.pixels > notification.metrics.maxScrollExtent - 200) {
+                  if (notification.metrics.pixels > notification.metrics.maxScrollExtent - 200 && state.hasMore) {
                     context.read<PokemonListCubit>().loadMore();
                   }
                   return false;
